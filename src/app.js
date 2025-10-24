@@ -10,6 +10,19 @@ const path = require('path');
 
 const app = express();
 
+// ... (import lainnya)
+
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://domain-frontend-anda.com' // GANTI nanti dengan domain frontend Anda
+    : 'http://localhost:3000', // Untuk development
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+// ... (sisa kode)
+
 // Middleware
 app.use(helmet());
 app.use(cors());
