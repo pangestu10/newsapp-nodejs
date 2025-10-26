@@ -3,23 +3,22 @@ const { Sequelize } = require('sequelize');
 let sequelize;
 
 if (process.env.NODE_ENV === 'production') {
-  // Jalankan ini jika di production (Render)
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set in production environment");
-  }
+  // TAMBAHKAN BARIS INI UNTUK DEBUGGING
+  console.log("DATABASE_URL from env:", process.env.DATABASE_URL);
+
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     protocol: 'postgres',
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false, // Diperlukan untuk Render
+        rejectUnauthorized: false,
       },
     },
-    logging: false, // Matikan logging di production
+    logging: false,
   });
 } else {
-  // Jalankan ini jika di development (local)
+  // ... (blok development tidak berubah)
   require('dotenv').config();
   if (!process.env.DB_DIALECT) {
     throw new Error("DB_DIALECT is not set in .env file");
@@ -32,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       dialect: process.env.DB_DIALECT,
-      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      logging: false,
     }
   );
 }
