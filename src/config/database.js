@@ -3,11 +3,8 @@ const { Sequelize } = require('sequelize');
 let sequelize;
 
 if (process.env.NODE_ENV === 'production') {
-  // TAMBAHKAN BARIS INI UNTUK DEBUGGING
-  console.log("DATABASE_URL from env:", process.env.DATABASE_URL);
-
   sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
+    dialect: 'postgres', // Pastikan ini eksplisit
     protocol: 'postgres',
     dialectOptions: {
       ssl: {
