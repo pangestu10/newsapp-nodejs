@@ -14,7 +14,7 @@ const app = express();
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://domain-frontend-anda.com' // GANTI nanti dengan domain frontend Anda
+    ? 'https://newsapp-nodejs.onrender.com' // GANTI nanti dengan domain frontend Anda
     : 'http://localhost:3001', // Untuk development
   credentials: true,
 };
