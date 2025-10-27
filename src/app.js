@@ -15,7 +15,7 @@ const app = express();
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? 'https://domain-frontend-anda.com' // GANTI nanti dengan domain frontend Anda
-    : 'http://localhost:3000', // Untuk development
+    : 'http://localhost:3001', // Untuk development
   credentials: true,
 };
 
