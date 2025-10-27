@@ -12,15 +12,19 @@ const app = express();
 
 // --- KONFIGURASI CORS (LETAKKAN DI PALING ATAS) ---
 // PENTING: 'origin' harus berisi URL FRONTEND Anda, bukan backend
+// --- KONFIGURASI CORS ---
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://domain-frontend-anda.com' // <-- GANTI nanti dengan domain frontend production Anda
-    : ['http://localhost:3001', 'http://localhost:3000'], // Untuk development, gunakan array
+    ? [
+        'https://domain-frontend-anda.com', // <-- GANTI INI nanti dengan domain production Anda
+        'http://localhost:3001',           // <-- IZINKAN localhost untuk development
+        'http://localhost:3000'            // <-- IZINKAN localhost untuk development
+      ]
+    : ['http://localhost:3001', 'http://localhost:3000'], // Untuk development lokal
   credentials: true,
   optionsSuccessStatus: 200
 };
 
-// Gunakan middleware CORS HANYA SEKALI, dengan opsi yang sudah disetel
 app.use(cors(corsOptions));
 
 // --- KONFIGURASI HELMET (Agar tidak bentrok dengan CORS) ---
