@@ -10,22 +10,30 @@ const path = require('path');
 
 const app = express();
 
-// ... (import lainnya)
-
+// --- KONFIGURASI CORS (LETAKKAN DI PALING ATAS) ---
+// PENTING: 'origin' harus berisi URL FRONTEND Anda, bukan backend
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://newsapp-nodejs.onrender.com' // GANTI nanti dengan domain frontend Anda
-    : 'http://localhost:3001', // Untuk development
+    ? 'https://domain-frontend-anda.com' // <-- GANTI nanti dengan domain frontend production Anda
+    : ['http://localhost:3001', 'http://localhost:3000'], // Untuk development, gunakan array
   credentials: true,
+  optionsSuccessStatus: 200
 };
 
+// Gunakan middleware CORS HANYA SEKALI, dengan opsi yang sudah disetel
 app.use(cors(corsOptions));
 
-// ... (sisa kode)
+// --- KONFIGURASI HELMET (Agar tidak bentrok dengan CORS) ---
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "connect-src": ["'self'", process.env.NODE_ENV === 'production' ? 'https://domain-frontend-anda.com' : 'http://localhost:3001']
+    }
+  }
+}));
 
-// Middleware
-app.use(helmet());
-app.use(cors());
+// Middleware lainnya (URUTAN PENTING)
 app.use(expressPino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
