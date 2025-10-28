@@ -12,8 +12,11 @@ const createArticle = async (req, res) => {
 
 const getPublicArticles = async (req, res) => {
   try {
-    const { limit = 10, offset = 0 } = req.query;
-    const articles = await articleService.getPublicArticles(limit, offset);
+    const limit = Number.parseInt(req.query.limit ?? 10, 10);
+    const offset = Number.parseInt(req.query.offset ?? 0, 10);
+    const safeLimit = Number.isNaN(limit) ? 10 : Math.max(1, Math.min(100, limit));
+    const safeOffset = Number.isNaN(offset) ? 0 : Math.max(0, offset);
+    const articles = await articleService.getPublicArticles(safeLimit, safeOffset);
     return success(res, 200, 'Articles fetched successfully', articles);
   } catch (err) {
     return error(res, 500, err.message);
@@ -22,8 +25,11 @@ const getPublicArticles = async (req, res) => {
 
 const getAllArticlesForAdmin = async (req, res) => {
   try {
-    const { limit = 10, offset = 0 } = req.query;
-    const articles = await articleService.getAllArticlesForAdmin(limit, offset);
+    const limit = Number.parseInt(req.query.limit ?? 10, 10);
+    const offset = Number.parseInt(req.query.offset ?? 0, 10);
+    const safeLimit = Number.isNaN(limit) ? 10 : Math.max(1, Math.min(100, limit));
+    const safeOffset = Number.isNaN(offset) ? 0 : Math.max(0, offset);
+    const articles = await articleService.getAllArticlesForAdmin(safeLimit, safeOffset);
     return success(res, 200, 'All articles fetched successfully', articles);
   } catch (err) {
     return error(res, 500, err.message);
@@ -63,8 +69,12 @@ const deleteArticle = async (req, res) => {
 // TAMBAHKAN FUNGSI SEARCH INI
 const searchArticles = async (req, res) => {
   try {
-    const { q, limit = 10, offset = 0 } = req.query;
-    const articles = await articleService.searchArticles(q, limit, offset);
+    const { q } = req.query;
+    const limit = Number.parseInt(req.query.limit ?? 10, 10);
+    const offset = Number.parseInt(req.query.offset ?? 0, 10);
+    const safeLimit = Number.isNaN(limit) ? 10 : Math.max(1, Math.min(100, limit));
+    const safeOffset = Number.isNaN(offset) ? 0 : Math.max(0, offset);
+    const articles = await articleService.searchArticles(q, safeLimit, safeOffset);
     return success(res, 200, 'Search results', articles);
   } catch (err) {
     return error(res, 400, err.message);

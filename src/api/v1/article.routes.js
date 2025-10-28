@@ -14,8 +14,8 @@ const articleSchema = Joi.object({
 
 // Public routes
 router.get('/', articleController.getPublicArticles);
+router.get('/search', articleController.searchArticles); // Route pencarian harus sebelum parameter
 router.get('/:slug', articleController.getArticleBySlug);
-router.get('/search', articleController.searchArticles); // Route pencarian
 
 // Protected routes
 router.use(auth);
@@ -23,7 +23,15 @@ router.use(auth);
 // Routes untuk writer/editor ke atas
 router.post('/', authorize('writer', 'editor', 'admin'), validate(articleSchema), articleController.createArticle);
 router.get('/admin/all', authorize('admin', 'editor'), articleController.getAllArticlesForAdmin);
-router.put('/:id', authorize('writer', 'editor', 'admin'), validate(articleSchema), articleController.updateArticle);
+
+// Allow partial updates for PUT by using a relaxed schema
+const updateArticleSchema = Joi.object({
+  title: Joi.string().min(5).optional(),
+  content: Joi.string().min(10).optional(),
+  status: Joi.string().valid('draft', 'published').optional(),
+}).min(1);
+
+router.put('/:id', authorize('writer', 'editor', 'admin'), validate(updateArticleSchema), articleController.updateArticle);
 router.delete('/:id', authorize('writer', 'admin'), articleController.deleteArticle);
 
 module.exports = router;
